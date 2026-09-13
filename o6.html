@@ -1,0 +1,1896 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="emerald" data-font-size="medium">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olympia SRS Practice - Luyện Tập Phản Xạ 10s & Ghi Nhớ Tự Động</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- SheetJS (XLSX) Library -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Base sizing defaults */
+            --font-scale: 1;
+            --base-text-sm: 0.875rem;
+            --base-text-base: 1rem;
+            --base-text-lg: 1.125rem;
+            --base-text-xl: 1.25rem;
+            --base-text-2xl: 1.5rem;
+            --base-text-3xl: 1.875rem;
+
+            /* Default Theme: Emerald */
+            --bg-cream: #FBF7EE;
+            --bg-card: #FFFFFF;
+            --bg-subtle: #F8FAF9;
+            --text-main: #1C3327;
+            --text-muted: #64748B;
+            --border-color: #E2E8F0;
+            
+            --theme-primary: #2E7D56;
+            --theme-dark: #225C3F;
+            --theme-light: #3A9B6B;
+            --theme-subtle: #E8F4EC;
+            --theme-border: rgba(46, 125, 86, 0.25);
+            --theme-badge-bg: rgba(46, 125, 86, 0.15);
+        }
+
+        /* Font Size Scaling Classes */
+        html[data-font-size="small"] {
+            --font-scale: 0.875;
+            font-size: 14px;
+        }
+        html[data-font-size="medium"] {
+            --font-scale: 1;
+            font-size: 16px;
+        }
+        html[data-font-size="large"] {
+            --font-scale: 1.125;
+            font-size: 18px;
+        }
+
+        /* Theme Variations */
+        html[data-theme="emerald"] {
+            --bg-cream: #FBF7EE;
+            --bg-card: #FFFFFF;
+            --bg-subtle: #F3F9F5;
+            --text-main: #1C3327;
+            --text-muted: #475569;
+            --border-color: #E2E8F0;
+            --theme-primary: #2E7D56;
+            --theme-dark: #225C3F;
+            --theme-light: #3A9B6B;
+            --theme-subtle: #E8F4EC;
+            --theme-border: rgba(46, 125, 86, 0.25);
+        }
+
+        html[data-theme="blue"] {
+            --bg-cream: #F4F7FC;
+            --bg-card: #FFFFFF;
+            --bg-subtle: #F0F5FA;
+            --text-main: #0F172A;
+            --text-muted: #475569;
+            --border-color: #E2E8F0;
+            --theme-primary: #1E56A0;
+            --theme-dark: #163172;
+            --theme-light: #3A70B8;
+            --theme-subtle: #EBF2FA;
+            --theme-border: rgba(30, 86, 160, 0.25);
+        }
+
+        html[data-theme="purple"] {
+            --bg-cream: #FAF7FC;
+            --bg-card: #FFFFFF;
+            --bg-subtle: #F6F0FA;
+            --text-main: #2E1065;
+            --text-muted: #581C87;
+            --border-color: #E9D5FF;
+            --theme-primary: #6B21A8;
+            --theme-dark: #4C1D95;
+            --theme-light: #8B5CF6;
+            --theme-subtle: #F3E8FF;
+            --theme-border: rgba(107, 33, 168, 0.25);
+        }
+
+        html[data-theme="gold"] {
+            --bg-cream: #FFFDF5;
+            --bg-card: #FFFFFF;
+            --bg-subtle: #FFFBEB;
+            --text-main: #451A03;
+            --text-muted: #78350F;
+            --border-color: #FDE68A;
+            --theme-primary: #B45309;
+            --theme-dark: #78350F;
+            --theme-light: #D97706;
+            --theme-subtle: #FEF3C7;
+            --theme-border: rgba(180, 83, 9, 0.25);
+        }
+
+        html[data-theme="rose"] {
+            --bg-cream: #FFF5F7;
+            --bg-card: #FFFFFF;
+            --bg-subtle: #FFF0F3;
+            --text-main: #4C0519;
+            --text-muted: #881337;
+            --border-color: #FECDD3;
+            --theme-primary: #BE123C;
+            --theme-dark: #881337;
+            --theme-light: #E11D48;
+            --theme-subtle: #FFE4E6;
+            --theme-border: rgba(190, 18, 60, 0.25);
+        }
+
+        html[data-theme="midnight"] {
+            --bg-cream: #0F172A;
+            --bg-card: #1E293B;
+            --bg-subtle: #334155;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --border-color: #475569;
+            --theme-primary: #38BDF8;
+            --theme-dark: #0284C7;
+            --theme-light: #7DD3FC;
+            --theme-subtle: #1E293B;
+            --theme-border: rgba(56, 189, 248, 0.35);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-cream);
+            color: var(--text-main);
+            user-select: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .font-heading {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Dynamic Theme Utility Classes */
+        .match-bg-primary {
+            background-color: var(--theme-primary) !important;
+        }
+        .match-bg-dark {
+            background-color: var(--theme-dark) !important;
+        }
+        .match-bg-subtle {
+            background-color: var(--theme-subtle) !important;
+        }
+        .match-bg-card {
+            background-color: var(--bg-card) !important;
+        }
+        .match-text-primary {
+            color: var(--theme-primary) !important;
+        }
+        .match-text-dark {
+            color: var(--theme-dark) !important;
+        }
+        .match-text-main {
+            color: var(--text-main) !important;
+        }
+        .match-text-muted {
+            color: var(--text-muted) !important;
+        }
+        .match-border-primary {
+            border-color: var(--theme-primary) !important;
+        }
+        .match-border-theme {
+            border-color: var(--theme-border) !important;
+        }
+        .match-border-card {
+            border-color: var(--border-color) !important;
+        }
+
+        .timer-bar-container {
+            background-color: var(--theme-border);
+            height: 12px;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .timer-bar-fill {
+            background-color: var(--theme-primary);
+            height: 100%;
+            width: 100%;
+            transition: width 0.1s linear, background-color 0.3s ease;
+        }
+
+        .timer-bar-fill.warning {
+            background-color: #D97706; /* Amber */
+        }
+        .timer-bar-fill.danger {
+            background-color: #DC2626; /* Red */
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--theme-primary);
+            opacity: 0.5;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <header class="w-full match-bg-card border-b match-border-card shadow-sm sticky top-0 z-30 transition-colors">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchMainTab('practice')">
+                <div class="w-10 h-10 rounded-xl match-bg-primary flex items-center justify-center text-white shadow-md font-extrabold text-xl transition-colors">
+                    <i data-lucide="trophy" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h1 class="font-heading font-black text-xl tracking-wide match-text-main transition-colors">OLYMPIA SRS PRACTICE</h1>
+                    <p class="text-xs match-text-muted font-medium">Luyện Phản Xạ 10s & Ghi Nhớ Tự Động SRS</p>
+                </div>
+            </div>
+            
+            <!-- Navigation Tabs & Settings Button -->
+            <nav class="flex flex-wrap items-center justify-center gap-2 text-xs font-bold font-heading">
+                <button id="nav-btn-practice" onclick="switchMainTab('practice')" class="px-3.5 py-2 rounded-xl transition flex items-center gap-2 match-bg-primary text-white shadow-sm">
+                    <i data-lucide="play-circle" class="w-4 h-4"></i>
+                    <span>Luyện Tập</span>
+                </button>
+                <button id="nav-btn-bank" onclick="switchMainTab('bank')" class="px-3.5 py-2 rounded-xl transition flex items-center gap-2 match-text-main hover:bg-black/5">
+                    <i data-lucide="database" class="w-4 h-4"></i>
+                    <span>Ngân Hàng Câu Hỏi</span>
+                </button>
+                <button id="nav-btn-stats" onclick="switchMainTab('stats')" class="px-3.5 py-2 rounded-xl transition flex items-center gap-2 match-text-main hover:bg-black/5">
+                    <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
+                    <span>Thống Kê SRS</span>
+                </button>
+                
+                <div class="h-5 w-px match-border-card mx-1 hidden sm:block"></div>
+
+                <!-- Integrated Settings Modal Button -->
+                <button onclick="toggleSettingsModal()" class="px-3 py-2 rounded-xl border match-border-card bg-black/5 hover:bg-black/10 match-text-main transition flex items-center gap-1.5 shadow-sm" title="Mở Cài Đặt">
+                    <i data-lucide="settings" class="w-4 h-4 match-text-primary"></i>
+                    <span>Cài Đặt</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center p-3 sm:p-6">
+
+        <!-- TAB 1: PRACTICE VIEW -->
+        <section id="tab-practice" class="w-full max-w-4xl space-y-5">
+            
+            <!-- LANDING / START PANEL -->
+            <div id="view-landing" class="match-bg-card border match-border-theme rounded-2xl p-6 sm:p-10 shadow-sm space-y-8 transition-colors">
+                <div class="text-center space-y-3">
+                    <div class="inline-flex p-4 rounded-2xl match-bg-primary text-white mb-1 shadow-md transition-colors">
+                        <i data-lucide="timer" class="w-12 h-12"></i>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-heading font-black match-text-main">OLYMPIA SRS PRACTICE</h2>
+                    <p class="match-text-muted text-sm max-w-xl mx-auto leading-relaxed">
+                        Chế độ <strong>Phản Xạ Olympia</strong> kết hợp thuật toán <strong>SRS (Spaced Repetition System)</strong> tự động tối ưu chu kỳ lặp lại giúp bạn ghi nhớ siêu tốc!
+                    </p>
+                </div>
+
+                <!-- Time Mode & Display Mode Settings -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 match-bg-subtle p-4 rounded-xl border match-border-card transition-colors">
+                    <!-- Time Mode Toggle -->
+                    <div>
+                        <label class="text-xs font-bold uppercase tracking-wider match-text-muted mb-2 block flex items-center gap-1.5">
+                            <i data-lucide="clock" class="w-3.5 h-3.5 match-text-primary"></i>
+                            <span>Chế Độ Thời Gian</span>
+                        </label>
+                        <div class="flex rounded-xl match-bg-card p-1 border match-border-card shadow-sm">
+                            <button id="btn-time-mode-timed" onclick="setTimeMode('timed')" class="flex-1 py-2 rounded-lg text-xs font-bold transition match-bg-primary text-white shadow-sm">
+                                ⏱️ Có thời gian (10s)
+                            </button>
+                            <button id="btn-time-mode-chill" onclick="setTimeMode('chill')" class="flex-1 py-2 rounded-lg text-xs font-bold transition match-text-muted hover:match-text-main">
+                                ☕ Vừa học vừa chill
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Display / Card Mode Toggle -->
+                    <div>
+                        <label class="text-xs font-bold uppercase tracking-wider match-text-muted mb-2 block flex items-center gap-1.5">
+                            <i data-lucide="layers" class="w-3.5 h-3.5 match-text-primary"></i>
+                            <span>Hình Thức Trả Lời</span>
+                        </label>
+                        <div class="flex rounded-xl match-bg-card p-1 border match-border-card shadow-sm">
+                            <button id="btn-mode-input" onclick="setQuizMode('input')" class="flex-1 py-2 rounded-lg text-xs font-bold transition match-bg-primary text-white shadow-sm">
+                                ⌨️ Nhập Tự Do
+                            </button>
+                            <button id="btn-mode-flashcard" onclick="setQuizMode('flashcard')" class="flex-1 py-2 rounded-lg text-xs font-bold transition match-text-muted hover:match-text-main">
+                                🃏 Flashcard Lật Thẻ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Session Stage Selection Buttons -->
+                <div class="space-y-3">
+                    <p class="text-xs font-bold tracking-wider uppercase match-text-muted text-center">Chọn chặng thi Olympia để bắt đầu</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <button onclick="startQuizSession(15)" class="p-5 rounded-xl border match-border-theme match-bg-card hover:match-bg-subtle transition flex flex-col items-center gap-1 group shadow-sm text-center">
+                            <span class="text-xl font-black font-heading match-text-primary group-hover:scale-105 transition-transform">KHỞI ĐỘNG NHANH</span>
+                            <span class="text-xs font-bold match-text-muted">15 CÂU HỎI</span>
+                        </button>
+                        <button onclick="startQuizSession(30)" class="p-5 rounded-xl border match-border-theme match-bg-card hover:match-bg-subtle transition flex flex-col items-center gap-1 group shadow-sm text-center">
+                            <span class="text-xl font-black font-heading match-text-primary group-hover:scale-105 transition-transform">TĂNG TỐC</span>
+                            <span class="text-xs font-bold match-text-muted">30 CÂU HỎI</span>
+                        </button>
+                        <button onclick="startQuizSession(50)" class="p-5 rounded-xl border match-border-theme match-bg-card hover:match-bg-subtle transition flex flex-col items-center gap-1 group shadow-sm text-center">
+                            <span class="text-xl font-black font-heading match-text-primary group-hover:scale-105 transition-transform">ĐƯỜNG DÀI</span>
+                            <span class="text-xs font-bold match-text-muted">50 CÂU HỎI</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-between items-center text-xs match-text-muted pt-3 border-t match-border-card gap-2">
+                    <span class="flex items-center gap-1">
+                        <i data-lucide="database" class="w-3.5 h-3.5"></i> Ngân hàng hiện có: <strong id="landing-bank-count" class="match-text-primary">0</strong> câu
+                    </span>
+                    <button onclick="resetSRSProgress()" class="text-red-500 hover:text-red-600 underline flex items-center gap-1 font-medium">
+                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Đặt lại điểm & trọng số SRS
+                    </button>
+                </div>
+            </div>
+
+            <!-- ACTIVE QUIZ PANEL -->
+            <div id="view-quiz" class="match-bg-card border match-border-theme rounded-2xl p-3.5 sm:p-6 shadow-sm space-y-4 hidden transition-colors">
+                
+                <!-- TOP CARD SECTION: COMPACT ELEGANT QUESTION CARD -->
+                <div class="grid grid-cols-12 gap-2.5 sm:gap-3.5 items-stretch">
+                    
+                    <!-- Left Square Badge: Displays Score / Current Question Number -->
+                    <div class="col-span-4 sm:col-span-3 match-bg-primary text-white rounded-xl p-2.5 sm:p-3.5 flex flex-col items-center justify-center text-center shadow-sm min-h-[95px] sm:min-h-[115px] transition-colors">
+                        <span class="text-[9px] sm:text-[11px] uppercase font-bold tracking-wider opacity-90">ĐIỂM SỐ</span>
+                        <div id="quiz-score-badge" class="text-3xl sm:text-4xl font-black font-heading leading-none mt-1">0</div>
+                        <div class="mt-1.5 text-[9px] sm:text-[11px] bg-black/20 px-2 py-0.5 rounded-full font-mono">
+                            Câu <span id="quiz-progress-text">1/30</span>
+                        </div>
+                    </div>
+
+                    <!-- Right Main Card Header & Question Text Area -->
+                    <div class="col-span-8 sm:col-span-9 match-bg-primary rounded-xl overflow-hidden flex flex-col shadow-sm transition-colors">
+                        <!-- Dark Header Banner -->
+                        <div class="match-bg-dark text-white px-3 py-1.5 sm:py-2 font-bold font-heading text-xs sm:text-sm flex justify-between items-center transition-colors">
+                            <span id="quiz-question-title">Câu hỏi số 1 (10 điểm)</span>
+                            <span id="quiz-field-badge" class="text-[9px] sm:text-[11px] bg-white/20 px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold">Lĩnh vực</span>
+                        </div>
+                        <!-- Question Body -->
+                        <div class="p-3.5 sm:p-5 text-white text-sm sm:text-lg font-bold flex-grow flex items-center leading-snug sm:leading-relaxed">
+                            <h3 id="quiz-question-text">Đang tải câu hỏi...</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TIMER & PREVIOUS ANSWER ROW -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center pt-0.5">
+                    
+                    <!-- COUNTDOWN TIMER OR CHILL INDICATOR -->
+                    <div class="md:col-span-7 space-y-1">
+                        <div class="flex justify-between items-center text-[11px] sm:text-xs font-bold match-text-main">
+                            <span class="flex items-center gap-1">
+                                <i data-lucide="clock" class="w-3.5 h-3.5 match-text-primary"></i>
+                                Chế độ: <span id="quiz-time-mode-label" class="match-text-primary">Có thời gian (10s)</span>
+                            </span>
+                            <span id="timer-numeric-display" class="font-mono text-xs sm:text-sm match-text-main">10.0s</span>
+                        </div>
+                        <div class="timer-bar-container" style="height: 10px;">
+                            <div id="timer-bar-fill" class="timer-bar-fill"></div>
+                        </div>
+                    </div>
+
+                    <!-- PREVIOUS QUESTION ANSWER BOX -->
+                    <div class="md:col-span-5 flex items-center gap-2">
+                        <div class="match-bg-primary text-white text-[11px] sm:text-xs font-bold px-2.5 py-1.5 sm:py-2 rounded-lg whitespace-nowrap shadow-sm transition-colors">
+                            Đáp án câu trước
+                        </div>
+                        <div id="prev-answer-box" class="flex-grow match-bg-card border match-border-card match-text-main px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold min-h-[34px] flex items-center overflow-hidden">
+                            <span id="prev-answer-text" class="match-text-muted italic">Chưa có</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- USER ANSWER INPUT FORM -->
+                <div id="input-container" class="pt-1">
+                    <form id="answer-form" onsubmit="handleAnswerSubmit(event)" class="flex flex-col sm:flex-row gap-2">
+                        <input 
+                            type="text" 
+                            id="user-answer-input" 
+                            placeholder="Nhập câu trả lời của bạn tại đây..." 
+                            autocomplete="off"
+                            class="flex-grow match-bg-card border-2 match-border-card focus:border-slate-500 focus:outline-none rounded-xl px-3.5 py-2.5 text-sm sm:text-base match-text-main placeholder:text-slate-400 shadow-inner font-medium"
+                        >
+                        <button 
+                            type="submit" 
+                            id="btn-submit-answer"
+                            class="match-bg-primary hover:opacity-90 text-white font-bold font-heading px-5 py-2.5 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1.5 transition shadow-md whitespace-nowrap"
+                        >
+                            <span>GỬI ĐÁP ÁN</span>
+                            <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- FLASHCARD MODE CONTROLS -->
+                <div id="flashcard-container" class="space-y-3 hidden pt-2">
+                    <div id="flashcard-answer-box" class="p-4 match-bg-subtle border match-border-theme rounded-xl text-center hidden">
+                        <div class="text-xs match-text-main font-bold uppercase mb-1">Đáp án chính xác:</div>
+                        <div id="flashcard-answer-text" class="text-xl font-black match-text-primary">---</div>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="revealFlashcardAnswer()" id="btn-reveal" class="w-full py-3.5 match-bg-primary hover:opacity-90 text-white font-bold font-heading rounded-xl transition text-center shadow-md">
+                            HIỆN ĐÁP ÁN (LẬT THẺ)
+                        </button>
+                        <div id="flashcard-grade-btns" class="w-full grid grid-cols-2 gap-3 hidden">
+                            <button onclick="gradeFlashcard(false)" class="py-3.5 bg-red-600 hover:bg-red-700 font-bold font-heading rounded-xl text-white transition shadow-sm">
+                                ✕ CHƯA THUỘC (+ Trọng số)
+                            </button>
+                            <button onclick="gradeFlashcard(true)" class="py-3.5 match-bg-primary hover:opacity-90 font-bold font-heading rounded-xl text-white transition shadow-sm">
+                                ✓ ĐÃ THUỘC (- Trọng số)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FEEDBACK ALERT BOX -->
+                <div id="feedback-box" class="p-4 rounded-xl border flex items-center justify-between hidden transition-all duration-200">
+                    <div class="flex items-center gap-3">
+                        <div id="feedback-icon-bg" class="w-9 h-9 rounded-full flex items-center justify-center text-white">
+                            <i id="feedback-icon" data-lucide="check" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <div id="feedback-title" class="font-bold font-heading text-base">CHÍNH XÁC!</div>
+                            <div id="feedback-detail" class="text-xs opacity-90"></div>
+                        </div>
+                    </div>
+                    <button id="btn-next-question" onclick="nextQuestion()" class="px-4 py-2 match-bg-primary text-white hover:opacity-90 rounded-lg text-xs font-bold font-heading transition flex items-center gap-1 shadow-sm">
+                        <span>CÂU TIẾP</span>
+                        <span class="text-[10px] opacity-80 bg-black/20 px-1.5 py-0.5 rounded font-mono">(Enter ↵)</span>
+                    </button>
+                </div>
+
+                <!-- SRS STATS FOOTER BAR -->
+                <div class="flex justify-between items-center text-xs match-text-muted pt-2 border-t match-border-card">
+                    <span title="Trọng số xuất hiện hiện tại">Trọng số SRS: <strong id="quiz-weight-val" class="text-amber-500 font-mono">10</strong></span>
+                    <span title="Chuỗi đúng">Chuỗi đúng: <strong id="quiz-streak-val" class="match-text-primary font-mono">0</strong></span>
+                    <button onclick="showLandingView()" class="match-text-muted hover:match-text-main underline">Thoát lượt chơi</button>
+                </div>
+            </div>
+
+            <!-- RESULTS SUMMARY PANEL -->
+            <div id="view-results" class="match-bg-card border match-border-theme rounded-2xl p-6 sm:p-10 space-y-8 shadow-sm hidden transition-colors">
+                <div class="text-center space-y-3">
+                    <div class="inline-flex p-4 rounded-2xl match-bg-primary text-white mb-1 shadow-md">
+                        <i data-lucide="award" class="w-12 h-12"></i>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-black font-heading match-text-main">HOÀN THÀNH LƯỢT PHẢN XẠ</h2>
+                    <p class="match-text-muted text-sm max-w-md mx-auto">
+                        Thuật toán SRS đã tự động cập nhật độ ưu tiên câu hỏi cho lần ôn tập kế tiếp!
+                    </p>
+                </div>
+
+                <!-- Summary Stat Cards -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div class="match-bg-subtle border match-border-theme rounded-xl p-4 text-center">
+                        <div class="text-[11px] match-text-muted uppercase font-bold">Điểm đạt được</div>
+                        <div id="res-score" class="text-3xl font-black font-heading match-text-main mt-1">0</div>
+                    </div>
+                    <div class="match-bg-subtle border match-border-theme rounded-xl p-4 text-center">
+                        <div class="text-[11px] match-text-muted uppercase font-bold">Tỷ lệ chính xác</div>
+                        <div id="res-accuracy" class="text-3xl font-black font-heading match-text-primary mt-1">0%</div>
+                    </div>
+                    <div class="match-bg-subtle border match-border-theme rounded-xl p-4 text-center">
+                        <div class="text-[11px] match-text-muted uppercase font-bold">Câu đúng</div>
+                        <div id="res-correct" class="text-3xl font-black font-heading text-blue-500 mt-1">0</div>
+                    </div>
+                    <div class="match-bg-subtle border match-border-theme rounded-xl p-4 text-center">
+                        <div class="text-[11px] match-text-muted uppercase font-bold">Chưa đúng / Q.Giờ</div>
+                        <div id="res-wrong" class="text-3xl font-black font-heading text-red-500 mt-1">0</div>
+                    </div>
+                </div>
+
+                <!-- Question Review Breakdown List -->
+                <div class="space-y-3">
+                    <h3 class="text-sm font-bold font-heading match-text-main border-b match-border-card pb-2 flex items-center gap-2">
+                        <i data-lucide="list-checks" class="w-4 h-4 match-text-primary"></i>
+                        <span>Chi tiết đáp án & Sự thay đổi Trọng số SRS</span>
+                    </h3>
+                    
+                    <div id="results-list" class="max-h-80 overflow-y-auto space-y-2.5 pr-1">
+                        <!-- Dynamic review items generated via JS -->
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-3 pt-3 border-t match-border-card">
+                    <button onclick="showLandingView()" class="flex-1 py-3.5 px-5 match-bg-subtle hover:bg-black/10 font-bold font-heading rounded-xl transition match-text-main text-sm">
+                        VỀ TRANG CHỦ
+                    </button>
+                    <button onclick="restartSameQuiz()" class="flex-1 match-bg-primary hover:opacity-90 text-white font-bold font-heading py-3.5 px-5 rounded-xl transition text-sm shadow-md">
+                        TIẾP TỤC LUYỆN SRS
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- TAB 2: QUESTION BANK MANAGEMENT & INTEGRATED IMPORT -->
+        <section id="tab-bank" class="w-full max-w-5xl space-y-5 hidden">
+            <div class="match-bg-card border match-border-theme rounded-2xl p-6 shadow-sm space-y-5 transition-colors">
+                
+                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b match-border-card pb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2.5 match-bg-primary rounded-xl text-white">
+                            <i data-lucide="database" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold font-heading match-text-main">QUẢN LÝ NGÂN HÀNG CÂU HỎI</h2>
+                            <p class="text-xs match-text-muted">Xem, chỉnh sửa, thêm mới, xóa, nạp tệp Excel và điều chỉnh trọng số SRS</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="toggleImportSection()" class="px-3.5 py-2.5 bg-emerald-600 hover:bg-emerald-700 rounded-xl text-xs font-bold text-white transition flex items-center gap-2 shadow-sm">
+                            <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+                            <span>NẠP ĐỀ FILE</span>
+                        </button>
+                        <button onclick="openAddQuestionForm()" class="px-3.5 py-2.5 match-bg-primary hover:opacity-90 rounded-xl text-xs font-bold text-white transition flex items-center gap-2 shadow-sm">
+                            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                            <span>THÊM CÂU HỎI</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- INTEGRATED EXCEL & FILE IMPORT CONTAINER -->
+                <div id="bank-import-section" class="match-bg-subtle border match-border-theme rounded-2xl p-5 space-y-4 hidden">
+                    <div class="flex justify-between items-center border-b match-border-card pb-2">
+                        <h3 class="text-sm font-bold font-heading match-text-main flex items-center gap-2">
+                            <i data-lucide="upload-cloud" class="w-4 h-4 match-text-primary"></i>
+                            <span>Nạp Đề Từ Tệp Excel (.xlsx, .xls) hoặc JSON/TXT</span>
+                        </h3>
+                        <button onclick="toggleImportSection()" class="text-xs match-text-muted hover:match-text-main">Đóng ✕</button>
+                    </div>
+
+                    <!-- Drop Zone -->
+                    <div class="border-2 border-dashed match-border-primary hover:bg-black/5 rounded-xl p-6 text-center match-bg-card transition cursor-pointer" onclick="document.getElementById('excel-file-input').click()">
+                        <input type="file" id="excel-file-input" accept=".xlsx,.xls,.json,.txt" onchange="handleExcelImport(event)" class="hidden">
+                        
+                        <div class="w-10 h-10 mx-auto rounded-full match-bg-primary text-white flex items-center justify-center mb-2 shadow-sm">
+                            <i data-lucide="upload" class="w-5 h-5"></i>
+                        </div>
+                        <h4 class="text-xs font-bold match-text-main mb-1">Nhấp để chọn tệp hoặc kéo thả file Excel vào đây</h4>
+                        <p class="text-[11px] match-text-muted max-w-md mx-auto">
+                            Tự động nhận diện cột <code class="bg-black/10 px-1 rounded">CÂU HỎI</code>, <code class="bg-black/10 px-1 rounded">ĐÁP ÁN</code>, <code class="bg-black/10 px-1 rounded">LĨNH VỰC</code>.
+                        </p>
+                    </div>
+
+                    <!-- Import Status Alert -->
+                    <div id="import-status-box" class="p-3 rounded-lg border match-border-card match-bg-card hidden">
+                        <div id="import-status-text" class="text-xs font-bold"></div>
+                    </div>
+                </div>
+
+                <!-- Search & Filters Toolbar -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-3 match-bg-subtle p-3 rounded-xl border match-border-theme">
+                    <div class="md:col-span-6 relative">
+                        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-2.5 match-text-muted"></i>
+                        <input 
+                            type="text" 
+                            id="bank-search-input" 
+                            oninput="renderBankTable()" 
+                            placeholder="Tìm kiếm câu hỏi hoặc đáp án..." 
+                            class="w-full match-bg-card border match-border-card rounded-lg pl-9 pr-3 py-1.5 text-xs match-text-main focus:outline-none focus:border-slate-500"
+                        >
+                    </div>
+
+                    <div class="md:col-span-3">
+                        <select id="bank-field-filter" onchange="renderBankTable()" class="w-full match-bg-card border match-border-card rounded-lg p-1.5 text-xs match-text-main focus:outline-none focus:border-slate-500">
+                            <option value="ALL">Tất cả lĩnh vực</option>
+                        </select>
+                    </div>
+
+                    <div class="md:col-span-3 flex items-center justify-end">
+                        <button onclick="exportQuestionBank()" class="w-full py-1.5 bg-blue-600 hover:bg-blue-700 rounded-lg text-xs font-bold text-white transition flex items-center justify-center gap-1.5 shadow-sm">
+                            <i data-lucide="download" class="w-4 h-4"></i>
+                            <span>Xuất File JSON</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Question Bank Table -->
+                <div class="overflow-x-auto rounded-xl border match-border-card max-h-[480px] overflow-y-auto">
+                    <table class="w-full text-left text-xs match-text-main">
+                        <thead class="match-bg-subtle font-heading match-text-main uppercase text-[11px] sticky top-0 z-10 border-b match-border-card">
+                            <tr>
+                                <th class="p-3 w-12 text-center">STT</th>
+                                <th class="p-3 w-28">Lĩnh Vực</th>
+                                <th class="p-3">Nội Dung Câu Hỏi</th>
+                                <th class="p-3 w-40">Đáp Án Chuẩn</th>
+                                <th class="p-3 w-28 text-center">Trọng Số / Streak</th>
+                                <th class="p-3 w-24 text-center">Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bank-table-body" class="divide-y match-border-card">
+                            <!-- Table items rendered dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Footer Stats -->
+                <div class="flex justify-between items-center text-xs match-text-muted pt-2 border-t match-border-card">
+                    <div>
+                        Hiển thị <strong id="bank-showing-count" class="match-text-main">0</strong> / <strong id="bank-total-count" class="match-text-primary">0</strong> câu
+                    </div>
+                    <button onclick="clearAllBankQuestions()" class="text-red-500 hover:text-red-600 font-medium underline">
+                        Xóa tất cả ngân hàng câu hỏi
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 3: ENHANCED SRS STATS & ANALYTICS -->
+        <section id="tab-stats" class="w-full max-w-4xl space-y-5 hidden">
+            <div class="match-bg-card border match-border-theme rounded-2xl p-6 sm:p-8 shadow-sm space-y-6 transition-colors">
+                
+                <div class="flex items-center gap-3 border-b match-border-card pb-4">
+                    <div class="p-2.5 match-bg-primary rounded-xl text-white">
+                        <i data-lucide="bar-chart-2" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold font-heading match-text-main">THỐNG KÊ CHI TIẾT SRS</h2>
+                        <p class="text-xs match-text-muted">Phân tích mức độ ghi nhớ và phân bổ trọng số câu hỏi</p>
+                    </div>
+                </div>
+
+                <!-- Field Selector Integrated in Stats Tab -->
+                <div class="match-bg-subtle p-4 rounded-xl border match-border-card">
+                    <label class="text-xs font-bold uppercase tracking-wider match-text-muted mb-2 block flex items-center gap-1.5">
+                        <i data-lucide="filter" class="w-3.5 h-3.5 match-text-primary"></i>
+                        <span>Lĩnh Vực Ôn Tập / Luyện Tập</span>
+                    </label>
+                    <select id="select-field-filter" onchange="renderSRSAnalytics()" class="w-full match-bg-card border match-border-card rounded-xl p-3 text-sm match-text-main focus:outline-none focus:border-slate-500 shadow-sm">
+                        <option value="ALL">Tất cả lĩnh vực (Toán, Lý, Hóa, Sinh, Văn, Sử, Địa...)</option>
+                    </select>
+                </div>
+
+                <!-- Overview Stat Cards -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div class="p-3.5 match-bg-subtle border match-border-card rounded-xl text-center">
+                        <div class="text-[11px] match-text-muted font-bold uppercase tracking-wider">Tổng số câu hỏi</div>
+                        <div id="stat-total-q" class="text-2xl font-black font-heading match-text-main mt-1">0</div>
+                    </div>
+                    <div class="p-3.5 match-bg-subtle border match-border-theme rounded-xl text-center">
+                        <div class="text-[11px] match-text-muted font-bold uppercase tracking-wider">Đã thuộc vững (Streak≥3)</div>
+                        <div id="stat-mastered-q" class="text-2xl font-black font-heading match-text-primary mt-1">0</div>
+                    </div>
+                    <div class="p-3.5 bg-amber-500/10 border border-amber-500/20 rounded-xl text-center">
+                        <div class="text-[11px] match-text-muted font-bold uppercase tracking-wider">Cần tăng cường</div>
+                        <div id="stat-review-q" class="text-2xl font-black font-heading text-amber-500 mt-1">0</div>
+                    </div>
+                    <div class="p-3.5 bg-blue-500/10 border border-blue-500/20 rounded-xl text-center">
+                        <div class="text-[11px] match-text-muted font-bold uppercase tracking-wider">Tỷ lệ chính xác</div>
+                        <div id="stat-accuracy" class="text-2xl font-black font-heading text-blue-500 mt-1">0%</div>
+                    </div>
+                </div>
+
+                <!-- Detailed Weight Analysis Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="p-4 match-bg-subtle border match-border-theme rounded-xl text-center">
+                        <div class="text-xs match-text-muted font-bold uppercase">Đã thuộc (Weight ≤ 3)</div>
+                        <div id="analytics-mastered" class="text-3xl font-black font-heading match-text-primary mt-2">0</div>
+                        <div class="text-[11px] match-text-muted mt-1">Tần suất xuất hiện thấp</div>
+                    </div>
+
+                    <div class="p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl text-center">
+                        <div class="text-xs match-text-muted font-bold uppercase">Mức trung bình (3 &lt; Weight ≤ 15)</div>
+                        <div id="analytics-medium" class="text-3xl font-black font-heading text-amber-500 mt-2">0</div>
+                        <div class="text-[11px] match-text-muted mt-1">Tần suất xuất hiện bình thường</div>
+                    </div>
+
+                    <div class="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-center">
+                        <div class="text-xs match-text-muted font-bold uppercase">Cần tập trung (Weight &gt; 15)</div>
+                        <div id="analytics-high" class="text-3xl font-black font-heading text-red-500 mt-2">0</div>
+                        <div class="text-[11px] match-text-muted mt-1">Sẽ ưu tiên xuất hiện liên tục</div>
+                    </div>
+                </div>
+
+                <div class="space-y-3 pt-2">
+                    <h3 class="text-xs font-bold font-heading match-text-main uppercase tracking-wider">Phân bổ câu hỏi theo Lĩnh Vực</h3>
+                    <div id="field-breakdown-list" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- UNIFIED SETTINGS MODAL (AUDIO, THEME, FONT SIZE) -->
+    <div id="settings-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="w-full max-w-md match-bg-card rounded-2xl p-6 space-y-5 relative border match-border-card shadow-xl transition-colors">
+            <button onclick="toggleSettingsModal()" class="absolute top-4 right-4 p-2 match-text-muted hover:match-text-main rounded-lg">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="flex items-center gap-3 border-b match-border-card pb-3">
+                <i data-lucide="settings" class="w-6 h-6 match-text-primary"></i>
+                <h3 class="text-lg font-bold font-heading match-text-main">Cài Đặt Hệ Thống</h3>
+            </div>
+
+            <!-- Option 1: Audio Control -->
+            <div class="space-y-2">
+                <label class="text-xs font-bold uppercase tracking-wider match-text-muted block">Âm thanh hiệu ứng</label>
+                <button id="btn-sound-toggle-modal" onclick="toggleSound()" class="w-full p-3 rounded-xl border match-border-card bg-black/5 hover:bg-black/10 match-text-main transition flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-xs font-bold">
+                        <i id="sound-icon-modal" data-lucide="volume-2" class="w-4 h-4 match-text-primary"></i>
+                        <span>Trạng thái âm thanh:</span>
+                    </span>
+                    <span id="sound-status-label" class="text-xs font-bold text-emerald-600">ĐANG BẬT</span>
+                </button>
+            </div>
+
+            <!-- Option 2: Font Size Control -->
+            <div class="space-y-2">
+                <label class="text-xs font-bold uppercase tracking-wider match-text-muted block">Kích thước chữ (Font Size)</label>
+                <div class="grid grid-cols-3 gap-2">
+                    <button id="font-btn-small" onclick="setFontSize('small')" class="p-2.5 rounded-xl border match-border-card text-xs font-bold transition text-center">Nhỏ (A-)</button>
+                    <button id="font-btn-medium" onclick="setFontSize('medium')" class="p-2.5 rounded-xl border match-border-card text-xs font-bold transition text-center">Vừa (A)</button>
+                    <button id="font-btn-large" onclick="setFontSize('large')" class="p-2.5 rounded-xl border match-border-card text-xs font-bold transition text-center">Lớn (A+)</button>
+                </div>
+            </div>
+
+            <!-- Option 3: Color Theme Selector -->
+            <div class="space-y-2">
+                <label class="text-xs font-bold uppercase tracking-wider match-text-muted block">Giao diện màu (Theme)</label>
+                <div class="grid grid-cols-2 gap-2.5">
+                    <button onclick="setTheme('emerald')" class="p-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-left transition flex items-center gap-2.5">
+                        <span class="w-5 h-5 rounded-full bg-[#2E7D56] shadow-sm flex-shrink-0"></span>
+                        <span class="text-xs font-bold match-text-main">Xanh Lá</span>
+                    </button>
+
+                    <button onclick="setTheme('blue')" class="p-3 rounded-xl border border-blue-500/30 bg-blue-500/10 hover:bg-blue-500/20 text-left transition flex items-center gap-2.5">
+                        <span class="w-5 h-5 rounded-full bg-[#1E56A0] shadow-sm flex-shrink-0"></span>
+                        <span class="text-xs font-bold match-text-main">Xanh Dương</span>
+                    </button>
+
+                    <button onclick="setTheme('purple')" class="p-3 rounded-xl border border-purple-500/30 bg-purple-500/10 hover:bg-purple-500/20 text-left transition flex items-center gap-2.5">
+                        <span class="w-5 h-5 rounded-full bg-[#6B21A8] shadow-sm flex-shrink-0"></span>
+                        <span class="text-xs font-bold match-text-main">Tím Violet</span>
+                    </button>
+
+                    <button onclick="setTheme('gold')" class="p-3 rounded-xl border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-left transition flex items-center gap-2.5">
+                        <span class="w-5 h-5 rounded-full bg-[#B45309] shadow-sm flex-shrink-0"></span>
+                        <span class="text-xs font-bold match-text-main">Vàng Gold</span>
+                    </button>
+
+                    <button onclick="setTheme('rose')" class="p-3 rounded-xl border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 text-left transition flex items-center gap-2.5">
+                        <span class="w-5 h-5 rounded-full bg-[#BE123C] shadow-sm flex-shrink-0"></span>
+                        <span class="text-xs font-bold match-text-main">Hồng Rose</span>
+                    </button>
+
+                    <button onclick="setTheme('midnight')" class="p-3 rounded-xl border border-slate-600 bg-slate-800 hover:bg-slate-700 text-left transition flex items-center gap-2.5">
+                        <span class="w-5 h-5 rounded-full bg-[#38BDF8] shadow-sm flex-shrink-0"></span>
+                        <span class="text-xs font-bold text-white">Bóng Đêm</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="pt-2 text-right">
+                <button onclick="toggleSettingsModal()" class="px-5 py-2 match-bg-primary text-white font-bold rounded-xl text-xs transition shadow-sm">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT / ADD QUESTION MODAL -->
+    <div id="question-form-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="w-full max-w-lg match-bg-card rounded-2xl p-6 space-y-4 relative border match-border-card shadow-xl transition-colors">
+            <button onclick="closeQuestionFormModal()" class="absolute top-4 right-4 p-2 match-text-muted hover:match-text-main rounded-lg">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="flex items-center gap-3 border-b match-border-card pb-3">
+                <i id="form-modal-icon" data-lucide="edit" class="w-5 h-5 match-text-primary"></i>
+                <h3 id="form-modal-title" class="text-lg font-bold font-heading match-text-main">Chỉnh Sửa Câu Hỏi</h3>
+            </div>
+
+            <form id="question-editor-form" onsubmit="saveQuestionForm(event)" class="space-y-3 text-xs">
+                <input type="hidden" id="form-q-id">
+
+                <div>
+                    <label class="block font-bold match-text-main mb-1">Lĩnh Vực</label>
+                    <input type="text" id="form-q-field" required placeholder="Toán, Lý, Hóa, Sử, Địa, Văn..." class="w-full match-bg-card border match-border-card focus:outline-none rounded-lg p-2.5 match-text-main">
+                </div>
+
+                <div>
+                    <label class="block font-bold match-text-main mb-1">Nội Dung Câu Hỏi</label>
+                    <textarea id="form-q-question" rows="3" required placeholder="Nhập nội dung câu hỏi..." class="w-full match-bg-card border match-border-card focus:outline-none rounded-lg p-2.5 match-text-main"></textarea>
+                </div>
+
+                <div>
+                    <label class="block font-bold match-text-main mb-1">Đáp Án Chuẩn</label>
+                    <input type="text" id="form-q-answer" required placeholder="Nhập đáp án chính xác..." class="w-full match-bg-card border match-border-card focus:outline-none rounded-lg p-2.5 match-text-main">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold match-text-main mb-1">Trọng Số SRS (Weight)</label>
+                        <input type="number" id="form-q-weight" min="1" max="100" value="10" required class="w-full match-bg-card border match-border-card focus:outline-none rounded-lg p-2.5 match-text-main">
+                    </div>
+                    <div>
+                        <label class="block font-bold match-text-main mb-1">Chuỗi Đúng (Streak)</label>
+                        <input type="number" id="form-q-score" min="0" value="0" required class="w-full match-bg-card border match-border-card focus:outline-none rounded-lg p-2.5 match-text-main">
+                    </div>
+                </div>
+
+                <div class="pt-3 border-t match-border-card flex justify-end gap-2">
+                    <button type="button" onclick="closeQuestionFormModal()" class="px-4 py-2 match-bg-subtle hover:bg-black/10 rounded-lg match-text-main font-bold transition">Hủy</button>
+                    <button type="submit" class="px-4 py-2 match-bg-primary hover:opacity-90 rounded-lg text-white font-bold transition flex items-center gap-1">
+                        <i data-lucide="check" class="w-4 h-4"></i>
+                        <span>Lưu Thay Đổi</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="p-3 text-center text-xs match-text-muted border-t match-border-card match-bg-card transition-colors">
+        Olympia SRS Practice Platform &bull; Chế độ Luyện Phản Xạ 10s & Ghi Nhớ Tự Động
+    </footer>
+
+    <script>
+        // -------------------------------------------------------------
+        // 1. DATASET DEFINITION (OLYMPIA DE 5 & EXTENDED)
+        // -------------------------------------------------------------
+        const RAW_DATASET = [
+            { id: "owl5_01", field: "Math", q: "1+(-954)", a: "-953" },
+            { id: "owl5_02", field: "Sinh", q: "Nhà khoa học Thomas Hunt Morgan đã nghiên cứu học thuyết về gen trên loài sinh vật nào?", a: "Ruồi giấm" },
+            { id: "owl5_03", field: "Văn", q: "Câu ca dao 'Khi đi trai tráng, khi về bủng beo' nhắc đến đồn điền loại cây gì thời Pháp?", a: "Cao su" },
+            { id: "owl5_04", field: "Sử", q: "Chữ viết hình thành vào cuối thiên niên kỷ III TCN ở khu vực giữa hai sông Tigris và Euphrates?", a: "Lưỡng Hà" },
+            { id: "owl5_05", field: "Địa", q: "Thác Niagara là ranh giới tự nhiên giữa hai quốc gia Bắc Mỹ nào?", a: "Mỹ, Canada" },
+            { id: "owl5_06", field: "Anh", q: "Which global organization responsible for world peace was established after Yalta Conference 1945?", a: "United Nations" },
+            { id: "owl5_07", field: "Nghệ thuật", q: "Nhân vật dóm hỉnh nào được xem như biểu tượng linh hồn của nghệ thuật múa rối nước Việt Nam?", a: "Chú Tễu" },
+            { id: "owl5_08", field: "Lý", q: "Hạt sơ cấp truyền tương tác điện từ nào có khối lượng nghỉ bằng 0?", a: "Photon" },
+            { id: "owl5_09", field: "Hóa", q: "Độ âm điện của một nguyên tử đặc trưng cho khả năng hút hạt sơ cấp nào về phía mình?", a: "Electron" },
+            { id: "owl5_10", field: "Thể thao", q: "Hai loại thẻ phạt nào lần đầu tiên áp dụng chính thức tại World Cup 1970?", a: "Thẻ vàng, thẻ đỏ" },
+            { id: "owl5_11", field: "Toán", q: "Ước chung lớn nhất (ƯCLN) của hai số nguyên tố cùng nhau luôn bằng bao nhiêu?", a: "1" },
+            { id: "owl5_12", field: "Chung", q: "Thực phẩm Halal là tiêu chuẩn kiểm định dành riêng cho tín đồ tôn giáo nào?", a: "Hồi giáo" },
+            { id: "ext_01", field: "Địa", q: "Quốc gia nào sau đây không có đường biên giới trên đất liền với Việt Nam?", a: "Thái Lan" },
+            { id: "ext_02", field: "Sử", q: "Triều đại phong kiến nào ở Việt Nam kéo dài lâu nhất trong lịch sử?", a: "Nhà Hậu Lê" },
+            { id: "ext_03", field: "Lý", q: "Hành tinh nào trong Hệ Mặt Trời được mệnh danh là 'Hành tinh Đỏ'?", a: "Sao Hỏa" },
+            { id: "ext_04", field: "Văn", q: "Tác phẩm kiệt tác 'Truyện Kiều' của Nguyễn Du ban đầu có tên nguyên bản là gì?", a: "Đoạn Trường Tân Thanh" },
+            { id: "ext_05", field: "Lý", q: "Đơn vị đo cường độ dòng điện trong hệ đo lường quốc tế SI là gì?", a: "Ampe" },
+            { id: "ext_06", field: "Địa", q: "Tỉnh nào ở Việt Nam có diện tích tự nhiên lớn nhất cả nước?", a: "Nghệ An" },
+            { id: "ext_07", field: "Sử", q: "Bản Tuyên ngôn Độc lập khai sinh nước VNDCCH được đọc tại địa điểm nào?", a: "Quảng trường Ba Đình" },
+            { id: "ext_08", field: "Hóa", q: "Nguyên tố hóa học quý hiếm có ký hiệu hóa học là 'Au'?", a: "Vàng" },
+            { id: "ext_09", field: "Toán", q: "Trong một hình tròn chuẩn, có tổng cộng bao nhiêu đường kính?", a: "Vô số" },
+            { id: "ext_10", field: "Hóa", q: "Chất khí nào chiếm tỷ lệ thể tích lớn nhất trong khí quyển Trái Đất (78%)?", a: "Nito" },
+            { id: "ext_11", field: "Thể thao", q: "Thế vận hội Olympic hiện đại đầu tiên vào năm 1896 diễn ra tại đâu?", a: "Athens" }
+        ];
+
+        // -------------------------------------------------------------
+        // 2. GLOBAL STATE & SRS CONTROLLER
+        // -------------------------------------------------------------
+        let questionsDatabase = [];
+        let currentQuizSession = [];
+        let currentIndex = 0;
+        let sessionScore = 0;
+        let isSoundEnabled = true;
+        let quizMode = 'input'; // 'input' or 'flashcard'
+        let timeMode = 'timed'; // 'timed' or 'chill'
+        let currentTheme = 'emerald';
+        let currentFontSize = 'medium';
+        let sessionHistory = [];
+        let audioCtx = null;
+        let isAnswerSubmitted = false;
+        let lastAnswerText = "Chưa có";
+
+        // 10 Seconds Timer Variables
+        const QUESTION_TIMEOUT_SECONDS = 10;
+        let timerInterval = null;
+        let timerStartTime = 0;
+        let timeRemaining = QUESTION_TIMEOUT_SECONDS;
+
+        function toggleSettingsModal() {
+            const modal = document.getElementById('settings-modal');
+            if (modal) modal.classList.toggle('hidden');
+        }
+
+        function toggleSound() {
+            isSoundEnabled = !isSoundEnabled;
+            const label = document.getElementById('sound-status-label');
+            const icon = document.getElementById('sound-icon-modal');
+            if (label) {
+                label.textContent = isSoundEnabled ? 'ĐANG BẬT' : 'ĐÃ TẮT';
+                label.className = isSoundEnabled ? 'text-xs font-bold text-emerald-600' : 'text-xs font-bold text-red-500';
+            }
+            if (icon) {
+                icon.setAttribute('data-lucide', isSoundEnabled ? 'volume-2' : 'volume-x');
+                lucide.createIcons();
+            }
+        }
+
+        function setTheme(themeName) {
+            currentTheme = themeName;
+            document.documentElement.setAttribute('data-theme', themeName);
+            localStorage.setItem('olympia_srs_theme', themeName);
+        }
+
+        function setFontSize(size) {
+            currentFontSize = size;
+            document.documentElement.setAttribute('data-font-size', size);
+            localStorage.setItem('olympia_srs_font_size', size);
+
+            const btnS = document.getElementById('font-btn-small');
+            const btnM = document.getElementById('font-btn-medium');
+            const btnL = document.getElementById('font-btn-large');
+
+            [btnS, btnM, btnL].forEach(b => {
+                if (b) b.className = "p-2.5 rounded-xl border match-border-card text-xs font-bold transition text-center match-text-muted hover:match-text-main";
+            });
+
+            if (size === 'small' && btnS) btnS.className = "p-2.5 rounded-xl border match-border-card text-xs font-bold transition text-center match-bg-primary text-white shadow-sm";
+            if (size === 'medium' && btnM) btnM.className = "p-2.5 rounded-xl border match-border-card text-xs font-bold transition text-center match-bg-primary text-white shadow-sm";
+            if (size === 'large' && btnL) btnL.className = "p-2.5 rounded-xl border match-border-card text-xs font-bold transition text-center match-bg-primary text-white shadow-sm";
+        }
+
+        function setTimeMode(mode) {
+            timeMode = mode;
+            const btnTimed = document.getElementById('btn-time-mode-timed');
+            const btnChill = document.getElementById('btn-time-mode-chill');
+
+            if (mode === 'timed') {
+                btnTimed.className = 'flex-1 py-2 rounded-lg text-xs font-bold transition match-bg-primary text-white shadow-sm';
+                btnChill.className = 'flex-1 py-2 rounded-lg text-xs font-bold transition match-text-muted hover:match-text-main';
+            } else {
+                btnChill.className = 'flex-1 py-2 rounded-lg text-xs font-bold transition match-bg-primary text-white shadow-sm';
+                btnTimed.className = 'flex-1 py-2 rounded-lg text-xs font-bold transition match-text-muted hover:match-text-main';
+            }
+        }
+
+        function initSRSData() {
+            // Load saved theme & font size
+            const savedTheme = localStorage.getItem('olympia_srs_theme') || 'emerald';
+            setTheme(savedTheme);
+
+            const savedFontSize = localStorage.getItem('olympia_srs_font_size') || 'medium';
+            setFontSize(savedFontSize);
+
+            const savedBank = localStorage.getItem('olympia_srs_full_bank');
+            if (savedBank) {
+                try {
+                    questionsDatabase = JSON.parse(savedBank);
+                } catch(e) {
+                    questionsDatabase = [];
+                }
+            }
+
+            if (!questionsDatabase || questionsDatabase.length === 0) {
+                questionsDatabase = RAW_DATASET.map(item => ({
+                    id: item.id || 'q_' + Math.random().toString(36).substr(2, 9),
+                    field: item.field || 'Chung',
+                    question: item.q || item.question,
+                    answer: item.a || item.answer,
+                    weight: 10,
+                    score: 0,
+                    wrongCount: 0
+                }));
+                saveSRSData();
+            }
+        }
+
+        function saveSRSData() {
+            localStorage.setItem('olympia_srs_full_bank', JSON.stringify(questionsDatabase));
+            const bankCount = document.getElementById('landing-bank-count');
+            if (bankCount) bankCount.textContent = questionsDatabase.length;
+        }
+
+        function updateSRSQuestion(qId, isCorrect) {
+            const q = questionsDatabase.find(x => x.id === qId);
+            if (!q) return;
+
+            if (isCorrect) {
+                q.score = (q.score || 0) + 1;
+                q.weight = Math.max(1, Math.round((q.weight || 10) * 0.6));
+            } else {
+                q.score = 0;
+                q.wrongCount = (q.wrongCount || 0) + 1;
+                q.weight = Math.min(100, Math.round((q.weight || 10) * 2.0 + 10));
+            }
+            saveSRSData();
+        }
+
+        function selectSRSSample(count, fieldFilter = 'ALL') {
+            let pool = questionsDatabase;
+            if (fieldFilter !== 'ALL') {
+                pool = questionsDatabase.filter(q => q.field === fieldFilter);
+            }
+            if (pool.length === 0) pool = questionsDatabase;
+
+            const selected = [];
+            const poolCopy = [...pool];
+            const selectCount = Math.min(count, poolCopy.length);
+
+            for (let i = 0; i < selectCount; i++) {
+                const totalWeight = poolCopy.reduce((sum, item) => sum + (item.weight || 10), 0);
+                let randomVal = Math.random() * totalWeight;
+
+                let chosenIdx = 0;
+                for (let j = 0; j < poolCopy.length; j++) {
+                    randomVal -= (poolCopy[j].weight || 10);
+                    if (randomVal <= 0) {
+                        chosenIdx = j;
+                        break;
+                    }
+                }
+
+                selected.push(poolCopy[chosenIdx]);
+                poolCopy.splice(chosenIdx, 1);
+            }
+
+            return selected;
+        }
+
+        // Sound Synthesis Effect
+        function playSound(type) {
+            if (!isSoundEnabled) return;
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'correct') {
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                    osc.frequency.exponentialRampToValueAtTime(659.25, audioCtx.currentTime + 0.15); // E5
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                } else if (type === 'wrong' || type === 'timeout') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+                    osc.frequency.exponentialRampToValueAtTime(130.81, audioCtx.currentTime + 0.2); // C4
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                }
+            } catch(e) {}
+        }
+
+        // -------------------------------------------------------------
+        // 3. UI TAB SWITCHING & INITIALIZATION
+        // -------------------------------------------------------------
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            initSRSData();
+            populateFieldOptions();
+            updateDashboardStats();
+
+            // Keyboard shortcut for quick Enter press
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    const quizView = document.getElementById('view-quiz');
+                    if (quizView && !quizView.classList.contains('hidden')) {
+                        if (isAnswerSubmitted && quizMode === 'input') {
+                            e.preventDefault();
+                            nextQuestion();
+                        }
+                    }
+                }
+            });
+        });
+
+        function switchMainTab(tabName) {
+            const tabs = ['practice', 'bank', 'stats'];
+            tabs.forEach(t => {
+                const sec = document.getElementById(`tab-${t}`);
+                const btn = document.getElementById(`nav-btn-${t}`);
+                if (sec) sec.classList.add('hidden');
+                if (btn) {
+                    btn.className = "px-3.5 py-2 rounded-xl transition flex items-center gap-2 match-text-main hover:bg-black/5";
+                }
+            });
+
+            const activeSec = document.getElementById(`tab-${tabName}`);
+            const activeBtn = document.getElementById(`nav-btn-${tabName}`);
+            if (activeSec) activeSec.classList.remove('hidden');
+            if (activeBtn) {
+                activeBtn.className = "px-3.5 py-2 rounded-xl transition flex items-center gap-2 match-bg-primary text-white shadow-sm";
+            }
+
+            stopTimer();
+            if (tabName === 'bank') renderBankTable();
+            if (tabName === 'stats') renderSRSAnalytics();
+            if (tabName === 'practice') updateDashboardStats();
+        }
+
+        function toggleImportSection() {
+            const sec = document.getElementById('bank-import-section');
+            if (sec) sec.classList.toggle('hidden');
+        }
+
+        function populateFieldOptions() {
+            const fields = Array.from(new Set(questionsDatabase.map(q => q.field || 'Chung')));
+            
+            const selectEl = document.getElementById('select-field-filter');
+            if (selectEl) {
+                const currentVal = selectEl.value;
+                selectEl.innerHTML = '<option value="ALL">Tất cả lĩnh vực (Toán, Lý, Hóa, Sinh, Văn, Sử, Địa...)</option>';
+                fields.forEach(f => {
+                    selectEl.innerHTML += `<option value="${f}">${f}</option>`;
+                });
+                if (currentVal && Array.from(selectEl.options).some(o => o.value === currentVal)) {
+                    selectEl.value = currentVal;
+                }
+            }
+
+            const bankFilterEl = document.getElementById('bank-field-filter');
+            if (bankFilterEl) {
+                bankFilterEl.innerHTML = '<option value="ALL">Tất cả lĩnh vực</option>';
+                fields.forEach(f => {
+                    bankFilterEl.innerHTML += `<option value="${f}">${f}</option>`;
+                });
+            }
+        }
+
+        function updateDashboardStats() {
+            const landingCount = document.getElementById('landing-bank-count');
+            if (landingCount) landingCount.textContent = questionsDatabase.length;
+        }
+
+        function setQuizMode(mode) {
+            quizMode = mode;
+            const btnInput = document.getElementById('btn-mode-input');
+            const btnFlashcard = document.getElementById('btn-mode-flashcard');
+
+            if (mode === 'input') {
+                btnInput.className = 'flex-1 py-2 rounded-lg text-xs font-bold transition match-bg-primary text-white shadow-sm';
+                btnFlashcard.className = 'flex-1 py-2 rounded-lg text-xs font-bold transition match-text-muted hover:match-text-main';
+            } else {
+                btnFlashcard.className = 'flex-1 py-2 rounded-lg text-xs font-bold transition match-bg-primary text-white shadow-sm';
+                btnInput.className = 'flex-1 py-2 rounded-lg text-xs font-bold transition match-text-muted hover:match-text-main';
+            }
+        }
+
+        function resetSRSProgress() {
+            if (confirm('Bạn có chắc chắn muốn đặt lại toàn bộ trọng số (weight = 10) và điểm của tất cả câu hỏi?')) {
+                questionsDatabase.forEach(q => {
+                    q.weight = 10;
+                    q.score = 0;
+                    q.wrongCount = 0;
+                });
+                saveSRSData();
+                updateDashboardStats();
+                alert('Đã đặt lại tiến độ SRS thành công!');
+            }
+        }
+
+        // -------------------------------------------------------------
+        // 4. COUNTDOWN TIMER ENGINE (TIMED VS CHILL)
+        // -------------------------------------------------------------
+        function startTimerEngine() {
+            stopTimer();
+
+            const fillEl = document.getElementById('timer-bar-fill');
+            const numEl = document.getElementById('timer-numeric-display');
+            const labelEl = document.getElementById('quiz-time-mode-label');
+
+            if (timeMode === 'chill') {
+                labelEl.textContent = 'Vừa học vừa chill ☕';
+                numEl.textContent = 'Không giới hạn';
+                fillEl.style.width = '100%';
+                fillEl.classList.remove('warning', 'danger');
+                return;
+            }
+
+            labelEl.textContent = 'Có thời gian (10s) ⏱️';
+            timeRemaining = QUESTION_TIMEOUT_SECONDS;
+            timerStartTime = Date.now();
+            updateTimerBarUI();
+
+            timerInterval = setInterval(() => {
+                const elapsed = (Date.now() - timerStartTime) / 1000;
+                timeRemaining = Math.max(0, QUESTION_TIMEOUT_SECONDS - elapsed);
+
+                updateTimerBarUI();
+
+                if (timeRemaining <= 0) {
+                    stopTimer();
+                    handleTimeOut();
+                }
+            }, 50);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function updateTimerBarUI() {
+            if (timeMode === 'chill') return;
+
+            const fillEl = document.getElementById('timer-bar-fill');
+            const numEl = document.getElementById('timer-numeric-display');
+
+            const percent = (timeRemaining / QUESTION_TIMEOUT_SECONDS) * 100;
+            fillEl.style.width = `${percent}%`;
+            numEl.textContent = `${timeRemaining.toFixed(1)}s`;
+
+            fillEl.classList.remove('warning', 'danger');
+            if (timeRemaining <= 3.0) {
+                fillEl.classList.add('danger');
+            } else if (timeRemaining <= 6.0) {
+                fillEl.classList.add('warning');
+            }
+        }
+
+        function handleTimeOut() {
+            if (isAnswerSubmitted) return;
+            isAnswerSubmitted = true;
+
+            const qData = currentQuizSession[currentIndex];
+            const inputField = document.getElementById('user-answer-input');
+            inputField.disabled = true;
+
+            playSound('timeout');
+
+            const oldWeight = qData.weight || 10;
+            updateSRSQuestion(qData.id, false);
+            const newWeight = qData.weight || 10;
+
+            lastAnswerText = `${qData.answer} (Hết giờ 10s)`;
+            updatePreviousAnswerBox();
+
+            sessionHistory.push({
+                question: qData.question,
+                expected: qData.answer,
+                submitted: "(Hết 10 giây)",
+                isCorrect: false,
+                oldWeight: oldWeight,
+                newWeight: newWeight
+            });
+
+            showFeedback(false, qData.answer, "HẾT GIỜ 10 GIÂY!");
+        }
+
+        // -------------------------------------------------------------
+        // 5. GAMEPLAY & QUESTION CONTROLLER
+        // -------------------------------------------------------------
+        function startQuizSession(count) {
+            if (questionsDatabase.length === 0) {
+                alert('Ngân hàng câu hỏi hiện tại đang trống! Vui lòng nạp câu hỏi.');
+                return;
+            }
+
+            const filter = document.getElementById('select-field-filter') ? document.getElementById('select-field-filter').value : 'ALL';
+            currentQuizSession = selectSRSSample(count, filter);
+            
+            currentIndex = 0;
+            sessionScore = 0;
+            sessionHistory = [];
+            lastAnswerText = "Chưa có";
+
+            document.getElementById('view-landing').classList.add('hidden');
+            document.getElementById('view-results').classList.add('hidden');
+            document.getElementById('view-quiz').classList.remove('hidden');
+
+            loadCurrentQuestion();
+        }
+
+        function restartSameQuiz() {
+            startQuizSession(currentQuizSession.length || 30);
+        }
+
+        function loadCurrentQuestion() {
+            isAnswerSubmitted = false;
+            const qData = currentQuizSession[currentIndex];
+
+            document.getElementById('quiz-score-badge').textContent = sessionScore;
+            document.getElementById('quiz-progress-text').textContent = `${currentIndex + 1}/${currentQuizSession.length}`;
+            document.getElementById('quiz-question-title').textContent = `Câu hỏi số ${currentIndex + 1} (10 điểm)`;
+            document.getElementById('quiz-question-text').textContent = qData.question;
+            document.getElementById('quiz-field-badge').textContent = qData.field || 'Chung';
+            document.getElementById('quiz-weight-val').textContent = qData.weight || 10;
+            document.getElementById('quiz-streak-val').textContent = qData.score || 0;
+
+            updatePreviousAnswerBox();
+
+            if (quizMode === 'input') {
+                document.getElementById('input-container').classList.remove('hidden');
+                document.getElementById('flashcard-container').classList.add('hidden');
+
+                const inputField = document.getElementById('user-answer-input');
+                inputField.value = '';
+                inputField.disabled = false;
+                inputField.focus();
+
+                document.getElementById('feedback-box').classList.add('hidden');
+                
+                startTimerEngine();
+            } else {
+                stopTimer();
+                document.getElementById('input-container').classList.add('hidden');
+                document.getElementById('feedback-box').classList.add('hidden');
+                document.getElementById('flashcard-container').classList.remove('hidden');
+
+                document.getElementById('flashcard-answer-box').classList.add('hidden');
+                document.getElementById('flashcard-answer-text').textContent = qData.answer;
+                document.getElementById('btn-reveal').classList.remove('hidden');
+                document.getElementById('flashcard-grade-btns').classList.add('hidden');
+            }
+        }
+
+        function updatePreviousAnswerBox() {
+            const box = document.getElementById('prev-answer-text');
+            if (box) {
+                box.textContent = lastAnswerText;
+                box.className = lastAnswerText === "Chưa có" ? "match-text-muted italic" : "match-text-main font-bold";
+            }
+        }
+
+        function normalizeString(str) {
+            if (!str) return '';
+            return str
+                .toLowerCase()
+                .trim()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/đ/g, "d")
+                .replace(/[^a-z0-9]/g, "");
+        }
+
+        function handleAnswerSubmit(e) {
+            if (e) e.preventDefault();
+            if (isAnswerSubmitted) return;
+
+            stopTimer();
+            isAnswerSubmitted = true;
+
+            const inputField = document.getElementById('user-answer-input');
+            inputField.disabled = true;
+
+            const userText = inputField.value.trim();
+            const qData = currentQuizSession[currentIndex];
+
+            const normUser = normalizeString(userText);
+            const normAns = normalizeString(qData.answer);
+
+            const isCorrect = normUser.length > 0 && (normUser === normAns || normAns.includes(normUser));
+
+            const oldWeight = qData.weight || 10;
+            updateSRSQuestion(qData.id, isCorrect);
+            const newWeight = qData.weight || 10;
+
+            if (isCorrect) {
+                sessionScore += 10;
+                playSound('correct');
+            } else {
+                playSound('wrong');
+            }
+
+            lastAnswerText = qData.answer;
+            updatePreviousAnswerBox();
+
+            sessionHistory.push({
+                question: qData.question,
+                expected: qData.answer,
+                submitted: userText || "(Bỏ trống)",
+                isCorrect: isCorrect,
+                oldWeight: oldWeight,
+                newWeight: newWeight
+            });
+
+            showFeedback(isCorrect, qData.answer);
+        }
+
+        function revealFlashcardAnswer() {
+            document.getElementById('flashcard-answer-box').classList.remove('hidden');
+            document.getElementById('btn-reveal').classList.add('hidden');
+            document.getElementById('flashcard-grade-btns').classList.remove('hidden');
+        }
+
+        function gradeFlashcard(isCorrect) {
+            const qData = currentQuizSession[currentIndex];
+            const oldWeight = qData.weight || 10;
+            updateSRSQuestion(qData.id, isCorrect);
+            const newWeight = qData.weight || 10;
+
+            if (isCorrect) {
+                sessionScore += 10;
+                playSound('correct');
+            } else {
+                playSound('wrong');
+            }
+
+            lastAnswerText = qData.answer;
+            updatePreviousAnswerBox();
+
+            sessionHistory.push({
+                question: qData.question,
+                expected: qData.answer,
+                submitted: isCorrect ? "(Đã nhớ)" : "(Chưa nhớ)",
+                isCorrect: isCorrect,
+                oldWeight: oldWeight,
+                newWeight: newWeight
+            });
+
+            nextQuestion();
+        }
+
+        function showFeedback(isCorrect, expectedAns, customTitle = null) {
+            document.getElementById('input-container').classList.add('hidden');
+            const feedbackBox = document.getElementById('feedback-box');
+            const iconBg = document.getElementById('feedback-icon-bg');
+            const icon = document.getElementById('feedback-icon');
+            const title = document.getElementById('feedback-title');
+            const detail = document.getElementById('feedback-detail');
+
+            feedbackBox.classList.remove('hidden', 'match-bg-subtle', 'match-border-theme', 'bg-red-500/10', 'border-red-500/30');
+
+            if (isCorrect) {
+                feedbackBox.classList.add('match-bg-subtle', 'match-border-theme');
+                iconBg.className = 'w-9 h-9 rounded-full flex items-center justify-center match-bg-primary text-white';
+                icon.setAttribute('data-lucide', 'check');
+                title.textContent = customTitle || 'CHÍNH XÁC! (+10 ĐIỂM)';
+                title.className = 'font-bold font-heading text-base match-text-main';
+                detail.textContent = `Đáp án: ${expectedAns}`;
+            } else {
+                feedbackBox.classList.add('bg-red-500/10', 'border-red-500/30');
+                iconBg.className = 'w-9 h-9 rounded-full flex items-center justify-center bg-red-600 text-white';
+                icon.setAttribute('data-lucide', 'x');
+                title.textContent = customTitle || 'CHƯA CHÍNH XÁC!';
+                title.className = 'font-bold font-heading text-base text-red-500';
+                detail.textContent = `Đáp án chuẩn: ${expectedAns}`;
+            }
+
+            lucide.createIcons();
+        }
+
+        function nextQuestion() {
+            stopTimer();
+            currentIndex++;
+            if (currentIndex < currentQuizSession.length) {
+                loadCurrentQuestion();
+            } else {
+                finishQuizSession();
+            }
+        }
+
+        function finishQuizSession() {
+            stopTimer();
+            document.getElementById('view-quiz').classList.add('hidden');
+            document.getElementById('view-results').classList.remove('hidden');
+
+            const correctCount = sessionHistory.filter(item => item.isCorrect).length;
+            const wrongCount = sessionHistory.length - correctCount;
+            const accuracy = Math.round((correctCount / sessionHistory.length) * 100) || 0;
+
+            document.getElementById('res-score').textContent = sessionScore;
+            document.getElementById('res-accuracy').textContent = `${accuracy}%`;
+            document.getElementById('res-correct').textContent = correctCount;
+            document.getElementById('res-wrong').textContent = wrongCount;
+
+            const resultsList = document.getElementById('results-list');
+            resultsList.innerHTML = sessionHistory.map((item, idx) => `
+                <div class="p-3.5 rounded-xl border ${item.isCorrect ? 'match-bg-subtle match-border-theme' : 'bg-red-500/10 border-red-500/30'} space-y-1.5">
+                    <div class="flex items-start justify-between gap-2">
+                        <span class="text-xs font-bold uppercase tracking-wider ${item.isCorrect ? 'match-text-main' : 'text-red-500'}">
+                            Câu ${idx + 1}: ${item.isCorrect ? 'Đúng (Ưu tiên giảm)' : 'Chưa đúng (Tăng ưu tiên ôn tập)'}
+                        </span>
+                        <span class="text-xs font-mono match-bg-card px-2 py-0.5 rounded border match-border-card match-text-main">
+                            Weight: ${item.oldWeight} → ${item.newWeight}
+                        </span>
+                    </div>
+                    <p class="text-sm match-text-main font-bold">${escapeHtml(item.question)}</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 text-xs gap-2 pt-1 border-t match-border-card">
+                        <div class="match-text-muted">Đã nhập: <span class="font-bold match-text-main">${escapeHtml(item.submitted)}</span></div>
+                        <div class="match-text-muted">Đáp án chuẩn: <span class="font-bold match-text-primary">${escapeHtml(item.expected)}</span></div>
+                    </div>
+                </div>
+            `).join('');
+
+            updateDashboardStats();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text || '';
+            return div.innerHTML;
+        }
+
+        function showLandingView() {
+            stopTimer();
+            document.getElementById('view-results').classList.add('hidden');
+            document.getElementById('view-quiz').classList.add('hidden');
+            document.getElementById('view-landing').classList.remove('hidden');
+            updateDashboardStats();
+        }
+
+        // -------------------------------------------------------------
+        // 6. QUESTION BANK TABLE MANAGEMENT
+        // -------------------------------------------------------------
+        function renderBankTable() {
+            const searchVal = document.getElementById('bank-search-input').value.toLowerCase().trim();
+            const fieldVal = document.getElementById('bank-field-filter').value;
+
+            let filtered = questionsDatabase.filter(item => {
+                const matchesSearch = !searchVal || 
+                    (item.question && item.question.toLowerCase().includes(searchVal)) || 
+                    (item.answer && item.answer.toLowerCase().includes(searchVal));
+                const matchesField = fieldVal === 'ALL' || item.field === fieldVal;
+                return matchesSearch && matchesField;
+            });
+
+            document.getElementById('bank-showing-count').textContent = filtered.length;
+            document.getElementById('bank-total-count').textContent = questionsDatabase.length;
+
+            const tbody = document.getElementById('bank-table-body');
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="p-8 text-center match-text-muted italic">
+                            Không tìm thấy câu hỏi nào phù hợp với bộ lọc.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map((item, idx) => `
+                <tr class="hover:bg-black/5 transition border-b match-border-card">
+                    <td class="p-3 text-center match-text-muted font-mono">${idx + 1}</td>
+                    <td class="p-3">
+                        <span class="px-2 py-0.5 rounded match-bg-subtle border match-border-theme match-text-main font-bold text-[10px] uppercase">
+                            ${escapeHtml(item.field || 'Chung')}
+                        </span>
+                    </td>
+                    <td class="p-3 font-bold match-text-main max-w-md">
+                        ${escapeHtml(item.question)}
+                    </td>
+                    <td class="p-3 font-bold match-text-primary">
+                        ${escapeHtml(item.answer)}
+                    </td>
+                    <td class="p-3 text-center font-mono">
+                        <span class="text-amber-500 font-bold" title="Trọng số SRS">${item.weight || 10}</span> / 
+                        <span class="match-text-primary" title="Chuỗi đúng">${item.score || 0}</span>
+                    </td>
+                    <td class="p-3 text-center">
+                        <div class="flex items-center justify-center gap-1.5">
+                            <button onclick="openEditQuestionForm('${item.id}')" class="p-1 rounded match-bg-subtle hover:bg-black/10 match-text-main transition" title="Chỉnh sửa">
+                                <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                            </button>
+                            <button onclick="deleteBankQuestion('${item.id}')" class="p-1 rounded bg-red-500/10 hover:bg-red-500/20 text-red-500 transition" title="Xóa">
+                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        function openAddQuestionForm() {
+            document.getElementById('form-modal-title').textContent = 'Thêm Câu Hỏi Mới';
+            document.getElementById('form-q-id').value = '';
+            document.getElementById('form-q-field').value = '';
+            document.getElementById('form-q-question').value = '';
+            document.getElementById('form-q-answer').value = '';
+            document.getElementById('form-q-weight').value = 10;
+            document.getElementById('form-q-score').value = 0;
+
+            document.getElementById('question-form-modal').classList.remove('hidden');
+        }
+
+        function openEditQuestionForm(id) {
+            const item = questionsDatabase.find(q => q.id === id);
+            if (!item) return;
+
+            document.getElementById('form-modal-title').textContent = 'Chỉnh Sửa Câu Hỏi';
+            document.getElementById('form-q-id').value = item.id;
+            document.getElementById('form-q-field').value = item.field || 'Chung';
+            document.getElementById('form-q-question').value = item.question;
+            document.getElementById('form-q-answer').value = item.answer;
+            document.getElementById('form-q-weight').value = item.weight || 10;
+            document.getElementById('form-q-score').value = item.score || 0;
+
+            document.getElementById('question-form-modal').classList.remove('hidden');
+        }
+
+        function closeQuestionFormModal() {
+            document.getElementById('question-form-modal').classList.add('hidden');
+        }
+
+        function saveQuestionForm(e) {
+            e.preventDefault();
+            const id = document.getElementById('form-q-id').value;
+            const field = document.getElementById('form-q-field').value.trim();
+            const question = document.getElementById('form-q-question').value.trim();
+            const answer = document.getElementById('form-q-answer').value.trim();
+            const weight = parseInt(document.getElementById('form-q-weight').value) || 10;
+            const score = parseInt(document.getElementById('form-q-score').value) || 0;
+
+            if (!field || !question || !answer) {
+                alert('Vui lòng nhập đầy đủ các trường thông tin!');
+                return;
+            }
+
+            if (id) {
+                const q = questionsDatabase.find(x => x.id === id);
+                if (q) {
+                    q.field = field;
+                    q.question = question;
+                    q.answer = answer;
+                    q.weight = weight;
+                    q.score = score;
+                }
+            } else {
+                questionsDatabase.push({
+                    id: 'custom_' + Math.random().toString(36).substr(2, 9),
+                    field: field,
+                    question: question,
+                    answer: answer,
+                    weight: weight,
+                    score: score,
+                    wrongCount: 0
+                });
+            }
+
+            saveSRSData();
+            closeQuestionFormModal();
+            populateFieldOptions();
+            renderBankTable();
+            updateDashboardStats();
+        }
+
+        function deleteBankQuestion(id) {
+            if (confirm('Bạn có chắc muốn xóa câu hỏi này khỏi ngân hàng?')) {
+                questionsDatabase = questionsDatabase.filter(q => q.id !== id);
+                saveSRSData();
+                populateFieldOptions();
+                renderBankTable();
+                updateDashboardStats();
+            }
+        }
+
+        function clearAllBankQuestions() {
+            if (confirm('CẢNH BÁO: Bạn có chắc chắn muốn XÓA TẤT CẢ câu hỏi trong ngân hàng dữ liệu?')) {
+                questionsDatabase = [];
+                saveSRSData();
+                populateFieldOptions();
+                renderBankTable();
+                updateDashboardStats();
+            }
+        }
+
+        function exportQuestionBank() {
+            if (questionsDatabase.length === 0) {
+                alert('Ngân hàng câu hỏi hiện đang trống!');
+                return;
+            }
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(questionsDatabase, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `Olympia_SRS_Bank_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        // -------------------------------------------------------------
+        // 7. EXCEL (.XLSX) & FILE IMPORT SYSTEM
+        // -------------------------------------------------------------
+        function handleExcelImport(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const filename = file.name.toLowerCase();
+            const statusBox = document.getElementById('import-status-box');
+            const statusText = document.getElementById('import-status-text');
+            statusBox.classList.remove('hidden');
+            statusText.innerHTML = '<span class="text-amber-500">Đang đọc tệp tin...</span>';
+
+            if (filename.endsWith('.xlsx') || filename.endsWith('.xls')) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    try {
+                        const data = new Uint8Array(evt.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' });
+
+                        let importedList = [];
+                        workbook.SheetNames.forEach(sheetName => {
+                            const worksheet = workbook.Sheets[sheetName];
+                            const jsonRows = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: '' });
+
+                            if (!jsonRows || jsonRows.length === 0) return;
+
+                            let headerIndex = -1;
+                            let colField = -1, colQ = -1, colAns = -1;
+
+                            for (let r = 0; r < Math.min(10, jsonRows.length); r++) {
+                                const row = jsonRows[r].map(c => String(c).toUpperCase().trim());
+                                for (let c = 0; c < row.length; c++) {
+                                    const val = row[c];
+                                    if (val.includes('CÂU HỎI') || val.includes('QUESTION') || val === 'Q') colQ = c;
+                                    if (val.includes('ĐÁP ÁN') || val.includes('ANSWER') || val === 'A') colAns = c;
+                                    if (val.includes('LĨNH VỰC') || val.includes('FIELD')) colField = c;
+                                }
+
+                                if (colQ !== -1) {
+                                    headerIndex = r;
+                                    break;
+                                }
+                            }
+
+                            if (headerIndex === -1) {
+                                headerIndex = -1;
+                                colField = 0; colQ = 1; colAns = 2;
+                            }
+
+                            for (let r = headerIndex + 1; r < jsonRows.length; r++) {
+                                const row = jsonRows[r];
+                                if (!row || row.length === 0) continue;
+
+                                let qText = colQ !== -1 && row[colQ] ? String(row[colQ]).trim() : '';
+                                let aText = colAns !== -1 && row[colAns] ? String(row[colAns]).trim() : '';
+                                let fText = colField !== -1 && row[colField] ? String(row[colField]).trim() : sheetName;
+
+                                if (qText && aText && qText.length > 2) {
+                                    importedList.push({
+                                        id: 'xl_' + Math.random().toString(36).substr(2, 9),
+                                        field: fText || 'Chung',
+                                        question: qText,
+                                        answer: aText,
+                                        weight: 10,
+                                        score: 0,
+                                        wrongCount: 0
+                                    });
+                                }
+                            }
+                        });
+
+                        if (importedList.length > 0) {
+                            questionsDatabase = [...questionsDatabase, ...importedList];
+                            saveSRSData();
+                            populateFieldOptions();
+                            renderBankTable();
+                            updateDashboardStats();
+                            statusText.innerHTML = `<span class="match-text-primary">✓ Đã nạp thành công ${importedList.length} câu hỏi mới từ Excel!</span>`;
+                        } else {
+                            statusText.innerHTML = `<span class="text-red-500">✕ Không tìm thấy dữ liệu câu hỏi hợp lệ trong tệp Excel.</span>`;
+                        }
+
+                    } catch (err) {
+                        statusText.innerHTML = `<span class="text-red-500">✕ Lỗi đọc file Excel: ${err.message}</span>`;
+                    }
+                    e.target.value = '';
+                };
+                reader.readAsArrayBuffer(file);
+            } else {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    try {
+                        const text = evt.target.result.trim();
+                        let importedList = [];
+
+                        if (text.startsWith('[') || text.startsWith('{')) {
+                            const parsed = JSON.parse(text);
+                            const list = Array.isArray(parsed) ? parsed : [parsed];
+                            list.forEach(item => {
+                                if ((item.question || item.q) && (item.answer || item.a)) {
+                                    importedList.push({
+                                        id: item.id || 'imp_' + Math.random().toString(36).substr(2, 9),
+                                        field: item.field || item.f || 'Tùy chỉnh',
+                                        question: (item.question || item.q).trim(),
+                                        answer: (item.answer || item.a).trim(),
+                                        weight: item.weight || 10,
+                                        score: item.score || 0,
+                                        wrongCount: item.wrongCount || 0
+                                    });
+                                }
+                            });
+                        }
+
+                        if (importedList.length > 0) {
+                            questionsDatabase = [...questionsDatabase, ...importedList];
+                            saveSRSData();
+                            populateFieldOptions();
+                            renderBankTable();
+                            updateDashboardStats();
+                            statusText.innerHTML = `<span class="match-text-primary">✓ Đã nạp thành công ${importedList.length} câu hỏi!</span>`;
+                        } else {
+                            statusText.innerHTML = `<span class="text-red-500">✕ Lỗi định dạng tệp JSON!</span>`;
+                        }
+                    } catch (err) {
+                        statusText.innerHTML = `<span class="text-red-500">✕ Lỗi xử lý tệp: ${err.message}</span>`;
+                    }
+                    e.target.value = '';
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        // -------------------------------------------------------------
+        // 8. SRS ANALYTICS
+        // -------------------------------------------------------------
+        function renderSRSAnalytics() {
+            const filterEl = document.getElementById('select-field-filter');
+            const filter = filterEl ? filterEl.value : 'ALL';
+
+            let pool = questionsDatabase;
+            if (filter !== 'ALL') {
+                pool = questionsDatabase.filter(q => q.field === filter);
+            }
+
+            const total = pool.length;
+            const mastered = pool.filter(q => (q.score || 0) >= 3 || (q.weight || 10) <= 3).length;
+            const review = pool.filter(q => (q.wrongCount || 0) > 0 || (q.weight || 10) > 10).length;
+
+            let totalAttempts = 0;
+            let totalCorrect = 0;
+            pool.forEach(q => {
+                totalAttempts += ((q.score || 0) + (q.wrongCount || 0));
+                totalCorrect += (q.score || 0);
+            });
+            const accuracy = totalAttempts > 0 ? Math.round((totalCorrect / totalAttempts) * 100) : 0;
+
+            document.getElementById('stat-total-q').textContent = total;
+            document.getElementById('stat-mastered-q').textContent = mastered;
+            document.getElementById('stat-review-q').textContent = review;
+            document.getElementById('stat-accuracy').textContent = `${accuracy}%`;
+
+            const wMastered = pool.filter(q => (q.weight || 10) <= 3).length;
+            const wMedium = pool.filter(q => (q.weight || 10) > 3 && (q.weight || 10) <= 15).length;
+            const wHigh = pool.filter(q => (q.weight || 10) > 15).length;
+
+            document.getElementById('analytics-mastered').textContent = wMastered;
+            document.getElementById('analytics-medium').textContent = wMedium;
+            document.getElementById('analytics-high').textContent = wHigh;
+
+            const fields = {};
+            pool.forEach(q => {
+                const f = q.field || 'Chung';
+                fields[f] = (fields[f] || 0) + 1;
+            });
+
+            const breakdownEl = document.getElementById('field-breakdown-list');
+            if (breakdownEl) {
+                breakdownEl.innerHTML = Object.keys(fields).map(f => {
+                    const count = fields[f];
+                    const percent = Math.round((count / (total || 1)) * 100);
+                    return `
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-xs font-bold">
+                                <span class="match-text-main">${escapeHtml(f)}</span>
+                                <span class="match-text-muted">${count} câu (${percent}%)</span>
+                            </div>
+                            <div class="w-full h-2 match-bg-subtle rounded-full overflow-hidden border match-border-card">
+                                <div class="h-full match-bg-primary rounded-full" style="width: ${percent}%"></div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+    </script>
+</body>
+</html>
